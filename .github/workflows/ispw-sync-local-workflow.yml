@@ -131,33 +131,24 @@ jobs:
         id: sync
         run: |
        
-        git fetch origin --tags
+         git fetch origin --tags
 
-        $currentTag = git describe --tags --abbrev=0 HEAD
+         $currentTag = git describe --tags --abbrev=0 HEAD
 
-        $previousTag = git describe --tags --abbrev=0 "${currentTag}^"
+         $previousTag = git describe --tags --abbrev=0 "${currentTag}^"
 
-        $fromCommit = git rev-parse --verify "${previousTag}^{commit}"
+         $fromCommit = git rev-parse --verify "${previousTag}^{commit}"
 
-        $toCommit = git rev-parse --verify HEAD
+         $toCommit = git rev-parse --verify HEAD
 
-        $currentCommit  = $toCommit
-        $previousCommit = $fromCommit
- 
-        Write-Host "Comparing previous tag $previousTag to HEAD"
-
-        Write-Host "Comparing tag $currentTag ($previousCommit) to HEAD ($currentCommit)"
-         
-      
-         
-         $fromCommit = (git rev-list -1 $previousTag)
-         $toCommit = (git rev-parse --verify HEAD)
-            
          $currentCommit  = $toCommit
          $previousCommit = $fromCommit
+ 
+         Write-Host "Comparing previous tag $previousTag to HEAD"
+
+         Write-Host "Comparing tag $currentTag ($previousCommit) to HEAD ($currentCommit)"
          
-         
-         
+       
          cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -data ${{ github.workspace }}\ispwcliwk  -gitBranch ${{ github.ref_name }} -host ${{ vars.HCI_HOST }} -port  ${{ vars.HCI_PORT }} -id ${{ vars.TSO_USER }} -pass ${{ secrets.TSO_TOKEN }} -protocol None -code 1047 -timeout 0 -ispwServerConfig ${{ vars.CP_RUNTIME }} -ispwConfigPath "./ispwconfig-nosb.yml" -ispwServerStream ${{ vars.CP_STREAM }} -ispwServerApp ${{ vars.CP_APPL }} -ispwCheckoutLevel "STG" -ispwContainerCreation "per-branch" -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} -gitRepoUrl "https://github.com/msingh9999/GitADCPMKS2-GHA.git" -gitFromHash  $previousCommit -gitCommit $currentCommit 
     
       - name: Check Build Parms
