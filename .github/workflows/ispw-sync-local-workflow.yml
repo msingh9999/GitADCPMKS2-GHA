@@ -45,7 +45,7 @@ jobs:
           containerCreation: 'per-branch'
           showEnv: true
           assignmentPrefix: ${{ vars.CP_ASSIGNPREFIX }}
-          ispwConfigPath: './ispwconfig_nosb.yml'
+          ispwConfigPath: './ispwconfig-nosb.yml'
 
       - name: Check Build Parms
         shell: pwsh
