@@ -130,9 +130,13 @@ jobs:
         shell: pwsh
         id: sync
         run: |
+       
          $currentTag = (git tag --sort=-refname).Split("`n")[0].Trim()
          $previousTag = (git tag --sort=-refname).Split("`n")[1].Trim()
-            
+ 
+         Write-Host "Current Tag:  $currentTag"
+         Write-Host "Previous Tag: $previousTag"
+         
          $fromCommit = (git rev-list -1 $previousTag)
          $toCommit = (git rev-parse --verify HEAD)
             
