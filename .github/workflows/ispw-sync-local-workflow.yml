@@ -27,7 +27,7 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.ref }}      
       - name: sync step
-        uses: bmc-compuware/ispw-sync-local@ZENG-318739
+        uses: bmc-compuware/ispw-sync-local
         id: sync
         with:
           host: ${{ vars.HCI_HOST }}
