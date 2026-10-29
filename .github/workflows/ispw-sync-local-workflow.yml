@@ -131,23 +131,22 @@ jobs:
         id: sync
         run: |
        
-         $currentTag = (git tag --sort=-refname).Split("`n")[0].Trim()
-         $previousTag = (git tag --sort=-refname).Split("`n")[1].Trim()
-         
-         Write-Host "Current Tag:  $currentTag"
-         Write-Host "Previous Tag: $previousTag"
-         
-         git fetch origin --tags
+        git fetch origin --tags
 
-         $currentTag = git describe --tags --abbrev=0 HEAD
+        $currentTag = git describe --tags --abbrev=0 HEAD
 
-         $previousCommit = git rev-parse --verify "${currentTag}^{commit}"
+        $previousTag = git describe --tags --abbrev=0 "${currentTag}^"
 
-         $currentCommit = git rev-parse --verify HEAD
-         
-        
+        $fromCommit = git rev-parse --verify "${previousTag}^{commit}"
 
-         Write-Host "Comparing tag $currentTag ($previousCommit) to HEAD ($currentCommit)"
+        $toCommit = git rev-parse --verify HEAD
+
+        $currentCommit  = $toCommit
+        $previousCommit = $fromCommit
+ 
+        Write-Host "Comparing previous tag $previousTag to HEAD"
+
+        Write-Host "Comparing tag $currentTag ($previousCommit) to HEAD ($currentCommit)"
          
       
          
