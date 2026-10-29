@@ -16,7 +16,7 @@ on:
 
 jobs:
   feature-branch-build:
-   if: (startsWith(github.ref, 'refs/heads/feature/'))
+   if: (startsWith(github.ref, 'refs/heads/feature'))
    runs-on: [self-hosted]
    env:
       Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
@@ -38,14 +38,14 @@ jobs:
           stream: ${{ vars.CP_STREAM }}
           application: ${{ vars.CP_APPL }}
           subAppl: ${{ vars.CP_SUBAPPL }}
-          checkoutLevel: 'FEAT'
+          checkoutLevel: 'QA1'
           gitUid: ${{ vars.GIT_USERID }}
           gitToken: ${{ secrets.GIT_TOKEN }}
           winTopazPath: ${{ env.Win_Topaz_Location }}
           containerCreation: 'per-branch'
           showEnv: true
           assignmentPrefix: ${{ vars.CP_ASSIGNPREFIX }}
-          ispwConfigPath: 'GenApp_MainframeCore\ispwconfig.yml'
+          ispwConfigPath: './ispwconfig.yml'
 
       - name: Check Build Parms
         shell: pwsh
@@ -120,13 +120,13 @@ jobs:
             echo User ID          : ${{ vars.TSO_USER }}
             echo CES URI          : http://cwcc.bmc.com:2020
             echo CES User ID      : ${{ vars.TSO_USER }}
-            echo Test Folder      : ./GenApp_MainframeCore/Tests/Unit
+            echo Test Folder      : ./Tests/Unit
             
             ${{ vars.CLI_LOCATION }}\TotalTestFTCLI.bat -code 1047 -e 5b508b8a787be73b59238d38 -u  ${{ vars.TSO_USER }} -p  ${{ secrets.TSO_TOKEN }} -s http://cwcc.bmc.com:2020/totaltestapi/ -cesu  ${{ vars.TSO_USER }} -cesp  ${{ secrets.TSO_TOKEN }} -f ./GenApp_MainframeCore/Tests/Unit -pnf changedPrograms.json -ccrepo 'PFHMKS0.XPCOVER.REPOST' -ctxvars '"ispw_app=MKS1,ispw_level=QA1,"' -R -G -v 6 -l jenkins -loglevel INFO -data ${{ github.workspace }}\ispwcliwk
 
 
   release-branch-build:
-   if: (startsWith(github.ref, 'refs/heads/release/'))
+   if: (startsWith(github.ref, 'refs/heads/release'))
    runs-on: [self-hosted]
    env:
     Win_Topaz_Location: ${{ vars.CLI_LOCATION }}
@@ -150,7 +150,7 @@ jobs:
          $currentCommit  = $toCommit
          $previousCommit = $fromCommit
          
-         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -data ${{ github.workspace }}\ispwcliwk  -gitBranch ${{ github.ref_name }} -host ${{ vars.HCI_HOST }} -port  ${{ vars.HCI_PORT }} -id ${{ vars.TSO_USER }} -pass ${{ secrets.TSO_TOKEN }} -protocol None -code 1047 -timeout 0 -ispwServerConfig ${{ vars.CP_RUNTIME }} -ispwConfigPath "GenApp_MainframeCore\ispwconfig-nosb.yml" -ispwServerStream ${{ vars.CP_STREAM }} -ispwServerApp ${{ vars.CP_APPL }} -ispwCheckoutLevel "RLSE" -ispwContainerCreation "per-branch" -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} -gitRepoUrl "https://github.com/CPWRGIT/GITFLOW_GFLD_GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
+         cmd.exe /c "${{ env.Win_Topaz_Location }}\IspwCLI.bat" -operation syncGitToIspw -gitLocalPath '.\' -data ${{ github.workspace }}\ispwcliwk  -gitBranch ${{ github.ref_name }} -host ${{ vars.HCI_HOST }} -port  ${{ vars.HCI_PORT }} -id ${{ vars.TSO_USER }} -pass ${{ secrets.TSO_TOKEN }} -protocol None -code 1047 -timeout 0 -ispwServerConfig ${{ vars.CP_RUNTIME }} -ispwConfigPath "./ispwconfig-nosb.yml" -ispwServerStream ${{ vars.CP_STREAM }} -ispwServerApp ${{ vars.CP_APPL }} -ispwCheckoutLevel "STG" -ispwContainerCreation "per-branch" -assignmentPrefix ${{ vars.CP_ASSIGNPREFIX }} -gitRepoUrl "https://github.com/msingh9999/GitADCPMKS2-GHA.git" -gitFromHash $previousCommit -gitCommit $currentCommit 
     
       - name: Check Build Parms
         shell: pwsh
